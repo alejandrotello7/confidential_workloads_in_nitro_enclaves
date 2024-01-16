@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enclave-runner-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: enclave-runner-container
+  template:
+    metadata:
+      labels:
+        app: enclave-runner-container
+    spec:
+      containers:
+      - name: enclave-runner-container
+        image: enclave-app-image
+        imagePullPolicy: Never
+        volumeMounts:
+          - name: enclave-volume
+            mountPath: /usr/src/app/enclave_runner/enclave_native
+        ports:
+        - containerPort: 50051
+      volumes:
+        - name: enclave-volume
+          hostPath:
+            path: /home/docker/home/ec2-user/enclave_native/
+            type: Directory
